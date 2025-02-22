@@ -1,26 +1,22 @@
 const express = require('express')
-const logger = require('./logger')
-const authorize = require('./authorize')
-const app = express()
-// req => middleware => res
-// 1. use vs route
-// 2 options = > our own / express / third party
-app.use([logger, authorize])
-app.get('/' , (req, res) => {
-    res.send('Home Page')
-    console.log(req.user)
-})
-app.get('/about' , (req , res) => {
-    res.send('About Page')
-})
-app.get('/api/products' , (req, res) => {
-    res.send('products')
+const {data, people} = require('./data')
+
+const app =  express()
+app.use(express.static('./methods-public'))
+app.use(express.urlencoded({extended: true}))
+app.get('/api/people', (req, res) => {
+    res.status(200).json({success: true, data: people})
 })
 
-app.get('/api/items' , (req, res) => {
-    res.send('items')
+app.post('/login', (req,res) => {
+    console.log(req.body)
+    const {name} = req.body
+    if(name){
+        return res.status(200).send(`Welcome ${name}`)
+    }
+    res.status(401).send('Please provide the crediantals')
 })
+
 app.listen(5000, () => {
-    console.log('Server is listening on Port : 5000')
+    console.log('API listening on port: 5000')
 })
-

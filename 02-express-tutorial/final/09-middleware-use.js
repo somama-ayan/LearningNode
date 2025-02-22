@@ -4,6 +4,7 @@ const logger = require('./logger')
 const authorize = require('./authorize')
 //  req => middleware => res
 app.use([logger, authorize])
+// app.use(express.static('./publis'))
 // api/home/about/products
 app.get('/', (req, res) => {
   res.send('Home')
